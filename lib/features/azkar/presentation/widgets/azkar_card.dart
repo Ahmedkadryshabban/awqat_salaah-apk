@@ -97,7 +97,7 @@ class _AzkarCardState extends State<AzkarCard>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 260),
         curve: Curves.easeInOut,
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsets.only(bottom: 9),
         decoration: AppDesignSystem.cardDecoration(
           isDark: isDark,
           isCompleted: isCompleted,
@@ -121,7 +121,7 @@ class _AzkarCardState extends State<AzkarCard>
                   : null,
               borderRadius: BorderRadius.circular(AppDesignSystem.radiusCard),
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -142,7 +142,7 @@ class _AzkarCardState extends State<AzkarCard>
                       isBookmarked: widget.isBookmarked,
                     ),
 
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
 
                     // Body: Arabic Dhikr Text Container + Virtue "من فضلها" Container
                     AzkarCardBody(
@@ -150,9 +150,9 @@ class _AzkarCardState extends State<AzkarCard>
                       isDark: isDark,
                     ),
 
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 9),
 
-                    // Footer: "حفظ" Bookmark pill button + [-] Count [+] interactive controls
+                    // Footer: Completion button + [-] Count [+] interactive controls
                     AzkarCardFooter(
                       item: widget.item,
                       isCompleted: isCompleted,
@@ -161,6 +161,7 @@ class _AzkarCardState extends State<AzkarCard>
                       scaleAnimation: _scaleAnimation,
                       onIncrement: widget.onIncrement,
                       onDecrement: widget.onDecrement ?? () {},
+                      onToggleComplete: widget.onToggleComplete,
                       onBookmark: widget.onBookmark ?? () {},
                       isBookmarked: widget.isBookmarked,
                     ),

@@ -212,9 +212,9 @@ class AzkarCardBody extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Main Arabic Dhikr Text Container (Soft tinted, generous spacing, high readability)
+        // Main Arabic Dhikr Text Container (Soft tinted, sleek compact spacing, high readability)
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: AppDesignSystem.dhikrTextContainerDecoration(
             isDark: isDark,
             isWarmParchment: isQuranic,
@@ -223,8 +223,8 @@ class AzkarCardBody extends StatelessWidget {
             item.arabicText,
             style: TextStyle(
               fontFamily: 'Cairo',
-              fontSize: 17.5,
-              height: 1.78,
+              fontSize: 16.5,
+              height: 1.68,
               fontWeight: FontWeight.w500,
               color: isDark ? AppColors.azkarTextDark : AppColors.azkarTextLight,
             ),
@@ -235,9 +235,9 @@ class AzkarCardBody extends StatelessWidget {
 
         // Virtue container ("من فضلها")
         if (item.reward != null || item.reference != null) ...[
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
             decoration: AppDesignSystem.virtueBoxDecoration(isDark: isDark),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,15 +248,15 @@ class AzkarCardBody extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.menu_book_outlined,
-                      size: 15,
+                      size: 13,
                       color: isDark ? AppColors.accentGoldLight : AppColors.primary,
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: 5),
                     Text(
                       'من فضلها',
                       style: TextStyle(
                         fontFamily: 'Cairo',
-                        fontSize: 12.5,
+                        fontSize: 11.5,
                         fontWeight: FontWeight.w700,
                         color: isDark ? AppColors.accentGoldLight : AppColors.primary,
                       ),
@@ -264,25 +264,25 @@ class AzkarCardBody extends StatelessWidget {
                   ],
                 ),
                 if (item.reward != null) ...[
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
                     item.reward!,
                     style: TextStyle(
                       fontFamily: 'Cairo',
-                      fontSize: 12,
-                      height: 1.5,
+                      fontSize: 11,
+                      height: 1.4,
                       color: isDark ? Colors.white70 : const Color(0xFF4B5563),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
                 if (item.reference != null) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: 2),
                   Text(
                     item.reference!,
                     style: TextStyle(
                       fontFamily: 'Cairo',
-                      fontSize: 11,
+                      fontSize: 10.5,
                       color: isDark ? Colors.white54 : const Color(0xFF6B7280),
                       fontWeight: FontWeight.w500,
                     ),
@@ -306,6 +306,7 @@ class AzkarCardFooter extends StatelessWidget {
   final Animation<double> scaleAnimation;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
+  final VoidCallback onToggleComplete;
   final VoidCallback? onBookmark;
   final bool isBookmarked;
 
@@ -318,6 +319,7 @@ class AzkarCardFooter extends StatelessWidget {
     required this.scaleAnimation,
     required this.onIncrement,
     required this.onDecrement,
+    required this.onToggleComplete,
     this.onBookmark,
     this.isBookmarked = false,
   });
@@ -328,48 +330,121 @@ class AzkarCardFooter extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Right Side (in RTL): Dhikr Repetition Info & Progress
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (isCompleted) ...[
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.check_circle_rounded,
-                      size: 16,
-                      color: isDark ? AppColors.accentGoldLight : AppColors.wirdPrimaryGreen,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      item.currentCount > item.targetCount
-                          ? 'اكتمل الذكر (${item.currentCount} مرة)'
-                          : 'اكتمل الذكر بحمد الله',
-                      style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.accentGoldLight : AppColors.wirdPrimaryGreen,
+        // Right Side (in RTL): 1-Tap Completion Pill Button or Completion Status
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (!isCompleted) ...[
+              // One-tap complete button: instantly finishes the dhikr (e.g. 100 repetitions)
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: isReorderMode
+                      ? null
+                      : () {
+                          HapticFeedback.heavyImpact();
+                          onToggleComplete();
+                        },
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AppColors.wirdPrimaryGreen.withValues(alpha: 0.15)
+                          : const Color(0xFFE8F5E9),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: isDark
+                            ? AppColors.wirdPrimaryGreen.withValues(alpha: 0.4)
+                            : const Color(0xFFA5D6A7),
+                        width: 1,
                       ),
                     ),
-                  ],
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.done_all_rounded,
+                          size: 16,
+                          color: isDark ? const Color(0xFF4ADE80) : const Color(0xFF2E7D32),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'إتمام الورد',
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? const Color(0xFF4ADE80) : const Color(0xFF2E7D32),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ] else if (item.currentCount > 0) ...[
+              ),
+              if (item.currentCount > 0) ...[
+                const SizedBox(width: 8),
                 Text(
-                  'أنجزت ${item.currentCount} من ${item.targetCount}',
+                  '${item.currentCount} / ${item.targetCount}',
                   style: TextStyle(
                     fontFamily: 'Cairo',
-                    fontSize: 12,
+                    fontSize: 11.5,
                     fontWeight: FontWeight.w600,
                     color: isDark ? AppColors.accentGoldLight : AppColors.wirdPrimaryGreen,
                   ),
                 ),
               ],
+            ] else ...[
+              // Already completed state
+              InkWell(
+                onTap: isReorderMode
+                    ? null
+                    : () {
+                        HapticFeedback.selectionClick();
+                        onToggleComplete();
+                      },
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0xFF143826)
+                        : const Color(0xFFE0F2E9),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: isDark
+                          ? const Color(0xFF266747)
+                          : const Color(0xFF81C784),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.check_circle_rounded,
+                        size: 15,
+                        color: isDark ? AppColors.accentGoldLight : AppColors.wirdPrimaryGreen,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        item.currentCount > item.targetCount
+                            ? 'مكتمل (${item.currentCount})'
+                            : 'مكتمل بحمد الله',
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.accentGoldLight : AppColors.wirdPrimaryGreen,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
-          ),
+          ],
         ),
 
         // Left Side (in RTL): Interactive Counter Square Box + Undo control
@@ -387,12 +462,12 @@ class AzkarCardFooter extends StatelessWidget {
                   },
                   borderRadius: BorderRadius.circular(10),
                   child: Container(
-                    width: 34,
-                    height: 34,
-                    margin: const EdgeInsets.only(left: 8),
+                    width: 30,
+                    height: 30,
+                    margin: const EdgeInsets.only(left: 6),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.white10 : const Color(0xFFF1F4F2),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isDark ? Colors.white12 : const Color(0xFFDCE5DC),
                         width: 1,
@@ -401,7 +476,7 @@ class AzkarCardFooter extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.remove_rounded,
-                      size: 18,
+                      size: 16,
                       color: isDark ? Colors.white70 : const Color(0xFF4B5563),
                     ),
                   ),
@@ -425,19 +500,19 @@ class AzkarCardFooter extends StatelessWidget {
                           HapticFeedback.mediumImpact();
                           onIncrement();
                         },
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(12),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 220),
                     curve: Curves.easeOutCubic,
-                    width: 50,
-                    height: 50,
+                    width: 42,
+                    height: 42,
                     decoration: BoxDecoration(
                       color: isCompleted
                           ? AppColors.wirdPrimaryGreen
                           : (isDark
                               ? const Color(0xFF1E382B)
                               : Colors.white),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isCompleted
                             ? AppColors.wirdPrimaryGreen
@@ -452,14 +527,14 @@ class AzkarCardFooter extends StatelessWidget {
                           ? [
                               BoxShadow(
                                 color: AppColors.wirdPrimaryGreen.withValues(alpha: isDark ? 0.35 : 0.25),
-                                blurRadius: 6,
+                                blurRadius: 5,
                                 offset: const Offset(0, 2),
                               ),
                             ]
                           : [
                               BoxShadow(
                                 color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.03),
-                                blurRadius: 4,
+                                blurRadius: 3,
                                 offset: const Offset(0, 1),
                               ),
                             ],
@@ -469,7 +544,7 @@ class AzkarCardFooter extends StatelessWidget {
                         ? const Icon(
                             Icons.check_rounded,
                             color: Colors.white,
-                            size: 28,
+                            size: 24,
                           )
                         : Text(
                             item.currentCount == 0
@@ -478,7 +553,7 @@ class AzkarCardFooter extends StatelessWidget {
                             style: TextStyle(
                               fontFamily: 'Cairo',
                               fontWeight: FontWeight.w800,
-                              fontSize: (item.currentCount == 0 ? item.targetCount : item.currentCount) > 99 ? 16 : 20,
+                              fontSize: (item.currentCount == 0 ? item.targetCount : item.currentCount) > 99 ? 14 : 17,
                               height: 1.1,
                               color: isCompleted
                                   ? Colors.white

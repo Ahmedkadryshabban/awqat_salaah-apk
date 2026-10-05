@@ -347,20 +347,20 @@ class _AzkarPageState extends State<AzkarPage> {
         state.completedCategoryCount >= state.totalCategoryCount;
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 4, 16, 10),
-      height: 116,
+      margin: const EdgeInsets.fromLTRB(16, 2, 16, 8),
+      height: 82,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -387,9 +387,9 @@ class _AzkarPageState extends State<AzkarPage> {
               ),
             ),
 
-            // Content inside the hero banner
+            // Content inside the compact hero banner
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -412,15 +412,15 @@ class _AzkarPageState extends State<AzkarPage> {
                             children: [
                               const Icon(
                                 Icons.wb_sunny_rounded,
-                                size: 20,
+                                size: 17,
                                 color: Color(0xFFFDE047),
                               ),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: 6),
                               Text(
                                 state.selectedCategory.titleArabic,
                                 style: const TextStyle(
                                   fontFamily: 'Cairo',
-                                  fontSize: 17,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.white,
                                 ),
@@ -432,10 +432,10 @@ class _AzkarPageState extends State<AzkarPage> {
 
                       // Left: Dark capsule with checkmark and completion text
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 2.5),
                         decoration: BoxDecoration(
                           color: Colors.black.withValues(alpha: 0.45),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: isAllDone
                                 ? const Color(0xFF4ADE80).withValues(alpha: 0.6)
@@ -448,17 +448,17 @@ class _AzkarPageState extends State<AzkarPage> {
                           children: [
                             Icon(
                               Icons.check_circle_rounded,
-                              size: 15,
+                              size: 13,
                               color: isAllDone ? const Color(0xFF4ADE80) : const Color(0xFF34D399),
                             ),
-                            const SizedBox(width: 5),
+                            const SizedBox(width: 4),
                             Text(
                               isAllDone
                                   ? 'مكتمل بحمد الله'
                                   : '${toArabicDigits(state.completedCategoryCount)} / ${toArabicDigits(state.totalCategoryCount)} مكتملة',
                               style: const TextStyle(
                                 fontFamily: 'Cairo',
-                                fontSize: 11.5,
+                                fontSize: 10.5,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -469,28 +469,36 @@ class _AzkarPageState extends State<AzkarPage> {
                     ],
                   ),
 
-                  // Row 2: Subtitle time description
-                  Text(
-                    state.selectedCategory.timeDescription,
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white.withValues(alpha: 0.86),
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                  // Row 3: Clean progress bar
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: LinearProgressIndicator(
-                      value: state.categoryCompletionRate,
-                      minHeight: 5.5,
-                      backgroundColor: Colors.white.withValues(alpha: 0.35),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4ADE80)),
-                    ),
+                  // Row 2: Subtitle time description + progress bar
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          state.selectedCategory.timeDescription,
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white.withValues(alpha: 0.86),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      SizedBox(
+                        width: 90,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: LinearProgressIndicator(
+                            value: state.categoryCompletionRate,
+                            minHeight: 4.5,
+                            backgroundColor: Colors.white.withValues(alpha: 0.35),
+                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4ADE80)),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
